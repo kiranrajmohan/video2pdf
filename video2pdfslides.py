@@ -6,10 +6,11 @@ import shutil
 import img2pdf
 import glob
 import argparse
+from pathlib import Path
 
 ############# Define constants
 
-OUTPUT_SLIDES_DIR = f"./output"
+OUTPUT_SLIDES_DIR = Path(f"./output")
 
 FRAME_RATE = 3                   # no.of frames per second that needs to be processed, fewer the count faster the speed
 WARMUP = FRAME_RATE              # initial number of frames to be skipped
@@ -91,9 +92,9 @@ def detect_unique_screenshots(video_path, output_folder_screenshot_path):
 
         if p_diff < MIN_PERCENT and not captured and frame_count > WARMUP:
             captured = True
-            filename = f"{screenshoots_count:03}_{round(frame_time/60, 2)}.png"
+            filename = Path(f"{screenshoots_count:03}_{round(frame_time/60, 2)}.png")
 
-            path = os.path.join(output_folder_screenshot_path, filename)
+            path = Path(output_folder_screenshot_path) /  Path(filename)
             print("saving {}".format(path))
             cv2.imwrite(path, orig)
             screenshoots_count += 1
@@ -110,7 +111,7 @@ def detect_unique_screenshots(video_path, output_folder_screenshot_path):
 
 def initialize_output_folder(video_path):
     '''Clean the output folder if already exists'''
-    output_folder_screenshot_path = f"{OUTPUT_SLIDES_DIR}/{video_path.rsplit('/')[-1].split('.')[0]}"
+    output_folder_screenshot_path = Path(f"{OUTPUT_SLIDES_DIR}") / Path(f"{video_path.rsplit('/')[-1].split('.')[0]}")
 
     if os.path.exists(output_folder_screenshot_path):
         shutil.rmtree(output_folder_screenshot_path)
